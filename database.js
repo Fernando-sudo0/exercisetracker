@@ -16,7 +16,7 @@ let ExercisesSchema = new mongoose.Schema ({
     userId: {type : String, required : true},
     description: {type : String, required  : true},
     duration: {type : Number, min : 1, required  : true},
-    date: {type : Date, default : Date.now()}})
+    date: {type : Date, default : Date.now().toUTCString()}})
 
 const UserModel =  mongoose.model('Users', UsersSchema)
 const ExercisesModel = mongoose.model('Exercises', ExercisesSchema);
