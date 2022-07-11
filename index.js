@@ -60,12 +60,12 @@ app.post('/api/users/:_id/exercises', (req, res, next) => {
       if(err){
         return next(err)
       }
-      return res.json({username : userdata.username, description: data.description, duration : data.duration, date : data.date.toUTCString(), _id : data._id});
+      return res.json({ _id : data._id, username : userdata.username, date : data.date.toUTCString(),  duration : data.duration, description: data.description});
     });
   })
 })
 
-// http://localhost:3000/api/users/62cb262d2407cf09260143a3/logs?from=2018-01-01&to=2023-07-23&limit=100
+// http://localhost:3000/api/users/62cb8a6937f0e477e4d9230f/logs?from=2018-01-01&to=2023-07-23&limit=100
 app.get('/api/users/:_id/logs?', (req, res, next) => {
 
 var startDate = new Date(req.query.from);
@@ -79,7 +79,7 @@ db.findOneUserById(req.params._id,  function(err, userdata){
   if(err) return console.log(err)
     db.findExercisesByUser(req.params._id, req.query.limit, startDate, endDate, function(err, exersicedata){
       if(err){next(err)}
-      return res.json({  _id : req.params._id, username: userdata.username,from : endDate,count : exersicedata.length , to : startDate,  log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
+      return res.json({  _id : req.params._id, username: userdata.username,from : endDate, to : startDate, count : exersicedata.length , log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
     })
   });
 })
