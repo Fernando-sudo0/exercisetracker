@@ -79,7 +79,7 @@ db.findOneUserById(req.params._id,  function(err, userdata){
   if(err) return console.log(err)
     db.findExercisesByUser(req.params._id, req.query.limit, startDate, endDate, function(err, exersicedata){
       if(err){next(err)}
-      return res.json({  _id : req.params._id, username: userdata.username,from : endDate, to : startDate, count : exersicedata.length , log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
+      return res.json({  _id : req.params._id, username: userdata.username,from : endDate.toUTCString(), to : startDate.toUTCString(), count : exersicedata.length , log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
     })
   });
 })
