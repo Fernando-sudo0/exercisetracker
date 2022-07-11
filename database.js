@@ -8,7 +8,7 @@ const config = {
   }
 
 
-mongoose.connect(process.env.Mongo_URI, config);
+mongoose.connect("mongodb+srv://sa:Contra123@cluster0.typgrkr.mongodb.net/Exercisetrackerdb", config);
 
 let UsersSchema = new mongoose.Schema({  username: {type : String}});
 
@@ -16,7 +16,7 @@ let ExercisesSchema = new mongoose.Schema ({
     userId: {type : String, required : true},
     description: {type : String, required  : true},
     duration: {type : Number, min : 1, required  : true},
-    date: {type : Date, default : Date.now}})
+    date: {type : Date, default : Date.now()}})
 
 const UserModel =  mongoose.model('Users', UsersSchema)
 const ExercisesModel = mongoose.model('Exercises', ExercisesSchema);
@@ -27,6 +27,7 @@ const createUser= (username, done) => {
 
     Users.save(function(err, data){
         if(err) return console.log(err);
+       
         done(null, data)
     }); 
 

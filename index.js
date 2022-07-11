@@ -27,7 +27,7 @@ app.post('/api/users', (req, res, next) => {
     if(!data){
       return next({message: 'Missing call argument'})
     }
-    return res.json({data})
+    return res.json({_id :data._id , username : data.username})
   })
 });
 app.get('/api/users', (req, res, next)=> {
@@ -35,7 +35,7 @@ app.get('/api/users', (req, res, next)=> {
     if(err){
       return next(err)
     }
-    return res.json({... data})
+    return res.json({...data})
   })
 
 })
