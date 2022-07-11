@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv').config()
 
 const config = {
     autoIndex : false, 
     useNewUrlParser : true,
     useUnifiedTopology : true
   }
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://sa:Contra123@cluster0.typgrkr.mongodb.net/Exercisetrackerdb";
 
-mongoose.connect(uri, config);
+
+mongoose.connect(process.env.Mongo_URI, config);
 
 let UsersSchema = new mongoose.Schema({  username: {type : String}});
 

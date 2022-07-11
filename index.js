@@ -11,9 +11,10 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
+
 const db = require('./database.js')
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', (req, res, next) => {
 //create a new user and return a json with username and id
 //each user is different register
   const {username} = req.body
@@ -29,16 +30,16 @@ app.post('/api/users', (req, res) => {
     return res.json({data})
   })
 });
-app.get('/api/users', (req, res)=> {
+app.get('/api/users', (req, res, next)=> {
   db.findUsers(function(err, data){
     if(err){
       return next(err)
     }
-    return res.json({data})
+    return res.json({... data})
   })
 
 })
-app.post('/api/users/:_id/exercises', (req, res) => {
+app.post('/api/users/:_id/exercises', (req, res, next) => {
   //create a exersice with an id, and callback with userId and username,
   const {description, duration, date} = req.body
   const userId = req.params._id
@@ -65,20 +66,23 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 })
 
 // http://localhost:3000/api/users/62cb262d2407cf09260143a3/logs?from=2018-01-01&to=2023-07-23&limit=100
-app.get('/api/users/:_id/logs?', (req, res) => {
+app.get('/api/users/:_id/logs?', (req, res, next) => {
 
 var startDate = new Date(req.query.from);
 var endDate = new Date (req.query.to);
 
 db.findOneUserById(req.params._id,  function(err, userdata){
+  if(err){ return next(err)}
+  if(!userdata){
+    return next({message: 'User missing'})
+  }
   if(err) return console.log(err)
     db.findExercisesByUser(req.params._id, req.query.limit, startDate, endDate, function(err, exersicedata){
       if(err){next(err)}
-      return res.json({  _id : userdata._id, username: userdata.username, to : startDate, from : endDate,count : exersicedata.length , log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
+      return res.json({  _id : req.params._id, username: userdata.username,from : endDate,count : exersicedata.length , to : startDate,  log : exersicedata.map(function(e){  return { description: e.description,duration :  e.duration, date : e.date.toUTCString() }})})
     })
   });
 })
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
